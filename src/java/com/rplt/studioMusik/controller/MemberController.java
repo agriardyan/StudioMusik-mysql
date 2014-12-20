@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -74,6 +75,8 @@ public class MemberController {
 
     @RequestMapping(value = "/halamanutamamember", method = {RequestMethod.GET, RequestMethod.POST})
     public String halamanUtamaMember(ModelMap model) {
+        List<StudioMusik> studioList = studioMusik.getDataList();
+        model.addAttribute("studioList", studioList);
         model.addAttribute("disable", "disabled");
         return "halaman-utama-member";
     }
@@ -88,7 +91,7 @@ public class MemberController {
         String tanggalSewa = request.getParameter("tanggalSewa").toUpperCase();
 
         List<PersewaanStudioMusik> dataListByDate = persewaanStudioMusik.getDataListByMonth(tanggalSewa);
-
+        
         model.addAttribute("tanggalSewa", tanggalSewa);
         model.addAttribute("dataListByDate", dataListByDate);
 
@@ -103,25 +106,35 @@ public class MemberController {
         String durasiSewa = request.getParameter("durasiSewa");
         String studio = request.getParameter("studio");
 
+        String mulaiSewa = tanggalSewa + " " + jamSewa;
+
         PersewaanStudioMusik pw = new PersewaanStudioMusik();
-        pw.setmJamMulaiSewa(jamSewa);
-        pw.setmMulaiSewa(tanggalSewa);
-        pw.setmSelesaiSewa(jamSewa);
+        pw.setmMulaiSewa(mulaiSewa);
         pw.setmDurasi(Integer.parseInt(durasiSewa));
         pw.setmKodeStudio(studio);
 
+        String selesaiSewa = persewaanStudioMusik.selesaiSewa(pw);
+
+        pw.setmSelesaiSewa(selesaiSewa);
+
+//        pw.setmJamMulaiSewa(jamSewa);
+//        pw.setmMulaiSewa(tanggalSewa);
+//        pw.setmSelesaiSewa(jamSewa);
+//        pw.setmDurasi(Integer.parseInt(durasiSewa));
+//        pw.setmKodeStudio(studio);
         boolean cek = persewaanStudioMusik.cekKetersediaanJadwal(pw);
+
         if (cek) {
             int biayaUnfmt = persewaanStudioMusik.hitungBiayaSewa(Integer.parseInt(durasiSewa), studio);
-            DecimalFormat df = new DecimalFormat("###,###.00");
+            DecimalFormat df = new DecimalFormat("###,###,###.00");
             String biaya = df.format(biayaUnfmt);
             biaya = biaya.replace(".", "&");
             biaya = biaya.replace(",", ".");
             biaya = biaya.replace("&", ",");
 
-            String saldo = member.getSaldo(session.getAttribute("username").toString());
+            int saldo = member.getSaldo(session.getAttribute("username").toString());
 
-            String saldoFmt = df.format(Integer.parseInt(saldo));
+            String saldoFmt = df.format(saldo);
 
             saldoFmt = saldoFmt.replace(".", "&");
             saldoFmt = saldoFmt.replace(",", ".");
@@ -140,6 +153,8 @@ public class MemberController {
 
             model.replace("disable", "disabled", "");
             model.addAttribute("tanggalSewa", tanggalSewa);
+            model.addAttribute("mulaiSewa", mulaiSewa);
+            model.addAttribute("selesaiSewa", selesaiSewa);
             model.addAttribute("jamSewa", jamSewa);
             model.addAttribute("durasiSewa", durasiSewa);
             model.addAttribute("studio", studio);
@@ -162,6 +177,8 @@ public class MemberController {
     public String summarySewa(ModelMap model) {
         String tanggalSewa = request.getParameter("tanggalSewa").toUpperCase();
         String jamSewa = request.getParameter("jamSewa");
+        String mulaiSewa = request.getParameter("mulaiSewa").toUpperCase();
+        String selesaiSewa = request.getParameter("selesaiSewa").toUpperCase();
         String durasiSewa = request.getParameter("durasiSewa");
         String studio = request.getParameter("studio");
         String namaPenyewa = request.getParameter("namaPenyewa").toUpperCase();
@@ -170,7 +187,7 @@ public class MemberController {
         String biayaunfmt = request.getParameter("biayaunfmt");
 
         int sisaSaldo = member.simulateKurangSaldo(session.getAttribute("username").toString(), Integer.parseInt(biayaunfmt));
-        DecimalFormat df = new DecimalFormat("###,###.00");
+        DecimalFormat df = new DecimalFormat("###,###,###.00");
 
         String remainSaldo = df.format(sisaSaldo);
 
@@ -190,27 +207,18 @@ public class MemberController {
 
         String namaStudio = studioMusik.getNamaStudio(studio);
 
-        String saldo = member.getSaldo(session.getAttribute("username").toString().toUpperCase());
-        String saldoUnformatted = saldo;
-
-        saldoUnformatted = saldoUnformatted.replace(".", "");
-        saldoUnformatted = saldoUnformatted.replace(",", "");
-
-        saldo = saldo.replace(".", "&");
-        saldo = saldo.replace(",", ".");
-        saldo = saldo.replace("&", ",");
-
         model.addAttribute("tanggalSewa", tanggalSewa);
         model.addAttribute("jamSewa", jamSewa);
         model.addAttribute("durasiSewa", durasiSewa);
         model.addAttribute("jamSelesai", jamSelesai);
+        model.addAttribute("mulaiSewa", mulaiSewa);
+        model.addAttribute("selesaiSewa", selesaiSewa);
         model.addAttribute("studio", studio);
         model.addAttribute("namaStudio", namaStudio);
         model.addAttribute("namaPenyewa", namaPenyewa);
         model.addAttribute("noTelp", noTelp);
         model.addAttribute("biaya", biaya);
         model.addAttribute("biayaunfmt", biayaunfmt);
-        model.addAttribute("saldo", saldo);
         model.addAttribute("sisaSaldo", sisaSaldo);
         model.addAttribute("remainSaldo", remainSaldo);
 
@@ -228,6 +236,9 @@ public class MemberController {
         String noTelp = request.getParameter("noTelp");
         String biaya = request.getParameter("biaya");
         String biayaunfmt = request.getParameter("biayaunfmt");
+        
+        List<StudioMusik> studioList = studioMusik.getDataList();
+        model.addAttribute("studioList", studioList);
 
         model.addAttribute("tanggalSewa", tanggalSewa);
         model.addAttribute("jamSewa", jamSewa);
@@ -249,6 +260,8 @@ public class MemberController {
         String tanggalSewa = request.getParameter("tanggalSewa").toUpperCase();
         String jamSewa = request.getParameter("jamSewa");
         String durasiSewa = request.getParameter("durasiSewa");
+        String mulaiSewa = request.getParameter("mulaiSewa").toUpperCase();
+        String selesaiSewa = request.getParameter("selesaiSewa").toUpperCase();
         String jamSelesai = request.getParameter("jamSelesai");
         String studio = request.getParameter("studio");
         String namaPenyewa = request.getParameter("namaPenyewa").toUpperCase();
@@ -261,8 +274,8 @@ public class MemberController {
         System.err.println("JAM SELESAI : " + jamSelesai);
 
         PersewaanStudioMusik pw = new PersewaanStudioMusik();
-        pw.setmMulaiSewa(tanggalSewa + " " + jamSewa);
-        pw.setmSelesaiSewa(tanggalSewa + " " + jamSelesai);
+        pw.setmMulaiSewa(mulaiSewa);
+        pw.setmSelesaiSewa(selesaiSewa);
         System.err.println("MULAI SEWA : " + pw.getmMulaiSewa());
         pw.setmDurasi(Integer.parseInt(durasiSewa));
         pw.setmKodeStudio(studio);
@@ -271,6 +284,7 @@ public class MemberController {
         pw.setmBiayaPelunasan(Integer.parseInt(biayaunfmt));
 
         persewaanStudioMusik.simpanData(pw);
+        
         model.addAttribute("kodeSewa", pw.getmKodeSewa());
 
         member.updateKurangSaldo(session.getAttribute("username").toString(), Integer.parseInt(saldo));
@@ -280,20 +294,21 @@ public class MemberController {
 
     @RequestMapping(value = "/cetakNota", method = RequestMethod.GET)
     public String cetakNota(HttpServletResponse response) {
-        Connection conn = DatabaseConnection.getmConnection();
+//        Connection conn = DatabaseConnection.getmConnection();
 //            File reportFile = new File(application.getRealPath("Coba.jasper"));//your report_name.jasper file
         File reportFile = new File(servletConfig.getServletContext()
                 .getRealPath("/resources/report/nota_persewaan.jasper"));
 
-        Map parameters = new HashMap();
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("P_KODESEWA", request.getParameter("kodeSewa"));
-        byte[] bytes = null;
-        try {
-            bytes = JasperRunManager.runReportToPdf(reportFile.getPath(), params, conn);
-        } catch (JRException ex) {
-            Logger.getLogger(OperatorController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        Map<String, Object> params = new HashMap<String, Object>();
+//        params.put("P_KODESEWA", request.getParameter("kodeSewa"));
+        
+        byte[] bytes = persewaanStudioMusik.cetakNota(request.getParameter("kodeSewa"), reportFile);
+//        
+//        try {
+//            bytes = JasperRunManager.runReportToPdf(reportFile.getPath(), params, conn);
+//        } catch (JRException ex) {
+//            Logger.getLogger(MemberController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
 
         response.setContentType("application/pdf");
         response.setContentLength(bytes.length);
@@ -305,7 +320,8 @@ public class MemberController {
             outStream.close();
         } catch (IOException ex) {
             Logger.getLogger(MemberController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } 
+        
         return "halaman-cetakNota-operator";
     }
 
@@ -381,11 +397,11 @@ public class MemberController {
         String telepon = dataListbyUser.get(0).getmNomorTelepon();
         String email = dataListbyUser.get(0).getmEmailMember();
 
-        DecimalFormat df = new DecimalFormat("###,###.00");
+        DecimalFormat df = new DecimalFormat("###,###,###.00");
 
-        String saldo = member.getSaldo(session.getAttribute("username").toString());
+        int saldo = member.getSaldo(session.getAttribute("username").toString());
 
-        String saldoFmt = df.format(Integer.parseInt(saldo));
+        String saldoFmt = df.format(saldo);
 
         saldoFmt = saldoFmt.replace(".", "&");
         saldoFmt = saldoFmt.replace(",", ".");

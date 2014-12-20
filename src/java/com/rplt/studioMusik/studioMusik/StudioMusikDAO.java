@@ -31,13 +31,15 @@ public class StudioMusikDAO implements IStudioMusikDAO<StudioMusik> {
     public void simpanData(StudioMusik pStudioMusik) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 
-        String sql = "INSERT INTO studio_musik VALUES(?, ?, ?)";
+        String sql = "INSERT INTO studio_musik VALUES(?, ?, ?, ?, ?)";
 
         jdbcTemplate.update(sql,
                 new Object[]{
                     pStudioMusik.getmKodeStudio(),
                     pStudioMusik.getmNamaStudio(),
-                    pStudioMusik.getmTarifPerJam()
+                    pStudioMusik.getmTarifPerJam(),
+                    pStudioMusik.getmJamBuka(), 
+                    pStudioMusik.getmJamTutup() 
                 });
     }
 
@@ -46,7 +48,9 @@ public class StudioMusikDAO implements IStudioMusikDAO<StudioMusik> {
 
         String sql = "UPDATE studio_musik SET "
                 + "nama_studio = ?, "
-                + "tarif_per_jam = ? "
+                + "tarif_per_jam = ?, "
+                + "jam_buka = ?, "
+                + "jam_tutup = ?"
                 + "WHERE kode_studio = ?";
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 
@@ -54,16 +58,18 @@ public class StudioMusikDAO implements IStudioMusikDAO<StudioMusik> {
                 new Object[]{
                     pStudioMusik.getmNamaStudio(),
                     pStudioMusik.getmTarifPerJam(),
-                    pStudioMusik.getmKodeStudio()
+                    pStudioMusik.getmKodeStudio(),
+                    pStudioMusik.getmJamBuka(), 
+                    pStudioMusik.getmJamTutup() 
                 });
     }
 
     @Override
     public void deleteData(String pKodeStudio) {
 
-        String sql = "DELETE FROM studio_musik WHERE kode_studio = " + pKodeStudio;
+        String sql = "DELETE FROM studio_musik WHERE kode_studio = ?";
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        jdbcTemplate.update(sql);
+        jdbcTemplate.update(sql, pKodeStudio);
     }
 
     @Override
@@ -84,7 +90,7 @@ public class StudioMusikDAO implements IStudioMusikDAO<StudioMusik> {
         String sql = "SELECT nama_studio FROM studio_musik WHERE kode_studio = ?";
 
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        namaStudio = jdbcTemplate.queryForObject(sql, new Object[]{pKode}, String.class);
+        namaStudio = jdbcTemplate.queryForObject(sql, String.class, pKode);
         return namaStudio;
     }
 
@@ -106,6 +112,8 @@ public class StudioMusikDAO implements IStudioMusikDAO<StudioMusik> {
             studioMusik.setmKodeStudio(rs.getString(1));
             studioMusik.setmNamaStudio(rs.getString(2));
             studioMusik.setmTarifPerJam(rs.getInt(3));
+            studioMusik.setmJamBuka(rs.getString(4));
+            studioMusik.setmJamTutup(rs.getString(5));
 
             return studioMusik;
         }

@@ -19,15 +19,21 @@
                 <i class="book icon"></i> SEWA
             </a>
             <div class="ui pointing dropdown link item">
+                <i class="user icon"></i> PERSEWAAN <i class="dropdown icon"></i>
+                <div class="menu">
+                    <a class="item" id="sche" href="underconstruction"><i class="book icon"></i>Lihat Jadwal</a>
+                    <a class="item" id="reg" href="underconstruction"><i class="add icon"></i>Cetak Ulang Nota</a>
+                    <a class="item" id="topup" href="underconstruction"><i class="dollar icon"></i>Buat Laporan Shift</a>
+                </div>
+            </div>
+            <div class="ui pointing dropdown link item">
                 <i class="user icon"></i> MEMBER <i class="dropdown icon"></i>
                 <div class="menu">
                     <a class="item" id="reg" href="registrasi"><i class="add icon"></i>Registrasi Member</a>
                     <a class="item" id="topup" href="topup"><i class="dollar icon"></i>Top Up Saldo</a>
                 </div>
             </div>
-            <a class="item" id="sche" href="halamanLihatJadwal">
-                <i class="book icon"></i> LIHAT JADWAL
-            </a>
+            
             <div class="right menu">
                 <form action="logout" method="POST">
                     <div class="ui dropdown link item">

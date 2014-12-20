@@ -40,8 +40,8 @@
           
         <bean id="dataSource"
           class="org.springframework.jdbc.datasource.DriverManagerDataSource"
-          p:driverClassName="oracle.jdbc.driver.OracleDriver"
-          p:url="jdbc:oracle:thin:@localhost:1521:xe"
+          p:driverClassName="com.mysql.jdbc.Driver"
+          p:url="jdbc:mysql://localhost:3306/studiomusik"
           p:username="mhs125314109"
           p:password="mhs125314109" />  
 

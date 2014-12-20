@@ -15,7 +15,6 @@ import com.rplt.studioMusik.studioMusik.StudioMusik;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -74,6 +73,8 @@ public class OperatorController {
     @RequestMapping(value = "/halamanutamaoperator", method = {RequestMethod.GET, RequestMethod.POST})
     public String halamanUtamaOperator(ModelMap model) {
         model.addAttribute("disable", "disabled");
+        List<StudioMusik> studioList = studioMusik.getDataList();
+        model.addAttribute("studioList", studioList);
         return "halaman-utama-operator-alternate";
     }
 
@@ -102,23 +103,31 @@ public class OperatorController {
         String durasiSewa = request.getParameter("durasiSewa");
         String studio = request.getParameter("studio");
 
+        String mulaiSewa = tanggalSewa + " " + jamSewa;
+
         PersewaanStudioMusik pw = new PersewaanStudioMusik();
-        pw.setmJamMulaiSewa(jamSewa);
-        pw.setmMulaiSewa(tanggalSewa);
-        pw.setmSelesaiSewa(jamSewa);
+        pw.setmMulaiSewa(mulaiSewa);
         pw.setmDurasi(Integer.parseInt(durasiSewa));
         pw.setmKodeStudio(studio);
 
+        String selesaiSewa = persewaanStudioMusik.selesaiSewa(pw);
+
+        pw.setmSelesaiSewa(selesaiSewa);
+
         boolean cek = persewaanStudioMusik.cekKetersediaanJadwal(pw);
+        
         if (cek) {
             int biayaUnfmt = persewaanStudioMusik.hitungBiayaSewa(Integer.parseInt(durasiSewa), studio);
-            DecimalFormat df = new DecimalFormat("###,###.00");
+            DecimalFormat df = new DecimalFormat("###,###,###.00");
             String biaya = df.format(biayaUnfmt);
             biaya = biaya.replace(".", "&");
             biaya = biaya.replace(",", ".");
             biaya = biaya.replace("&", ",");
+            
             model.replace("disable", "disabled", "");
             model.addAttribute("tanggalSewa", tanggalSewa);
+            model.addAttribute("mulaiSewa", mulaiSewa);
+            model.addAttribute("selesaiSewa", selesaiSewa);
             model.addAttribute("jamSewa", jamSewa);
             model.addAttribute("durasiSewa", durasiSewa);
             model.addAttribute("studio", studio);
@@ -140,6 +149,8 @@ public class OperatorController {
     public String summarySewa(ModelMap model) {
         String tanggalSewa = request.getParameter("tanggalSewa").toUpperCase();
         String jamSewa = request.getParameter("jamSewa");
+        String mulaiSewa = request.getParameter("mulaiSewa").toUpperCase();
+        String selesaiSewa = request.getParameter("selesaiSewa").toUpperCase();
         String durasiSewa = request.getParameter("durasiSewa");
         String studio = request.getParameter("studio");
         String namaPenyewa = request.getParameter("namaPenyewa").toUpperCase();
@@ -163,6 +174,8 @@ public class OperatorController {
         model.addAttribute("jamSewa", jamSewa);
         model.addAttribute("durasiSewa", durasiSewa);
         model.addAttribute("jamSelesai", jamSelesai);
+        model.addAttribute("mulaiSewa", mulaiSewa);
+        model.addAttribute("selesaiSewa", selesaiSewa);
         model.addAttribute("studio", studio);
         model.addAttribute("namaStudio", namaStudio);
         model.addAttribute("namaPenyewa", namaPenyewa);
@@ -184,6 +197,9 @@ public class OperatorController {
         String noTelp = request.getParameter("noTelp");
         String biaya = request.getParameter("biaya");
         String biayaunfmt = request.getParameter("biayaunfmt");
+        
+        List<StudioMusik> studioList = studioMusik.getDataList();
+        model.addAttribute("studioList", studioList);
 
         model.addAttribute("tanggalSewa", tanggalSewa);
         model.addAttribute("jamSewa", jamSewa);
@@ -205,6 +221,8 @@ public class OperatorController {
         String tanggalSewa = request.getParameter("tanggalSewa").toUpperCase();
         String jamSewa = request.getParameter("jamSewa");
         String durasiSewa = request.getParameter("durasiSewa");
+        String mulaiSewa = request.getParameter("mulaiSewa").toUpperCase();
+        String selesaiSewa = request.getParameter("selesaiSewa").toUpperCase();
         String jamSelesai = request.getParameter("jamSelesai");
         String studio = request.getParameter("studio");
         String namaPenyewa = request.getParameter("namaPenyewa").toUpperCase();
@@ -213,8 +231,8 @@ public class OperatorController {
         String biayaunfmt = request.getParameter("biayaunfmt");
 
         PersewaanStudioMusik pw = new PersewaanStudioMusik();
-        pw.setmMulaiSewa(tanggalSewa + " " + jamSewa);
-        pw.setmSelesaiSewa(tanggalSewa + " " + jamSelesai);
+        pw.setmMulaiSewa(mulaiSewa);
+        pw.setmSelesaiSewa(selesaiSewa);
         pw.setmDurasi(Integer.parseInt(durasiSewa));
         pw.setmKodeStudio(studio);
         pw.setmNamaPenyewa(namaPenyewa);
@@ -336,8 +354,8 @@ public class OperatorController {
         return "halaman-topUpSaldoMember-operator";
     }
 
-//    @RequestMapping(value = "/pelunasan", method = RequestMethod.GET)
-//    public String pelunasan() {
-//        return "halaman-pelunasan-operator";
-//    }
+    @RequestMapping(value = "/underconstruction", method = RequestMethod.GET)
+    public String underConstruction() {
+        return "under-construction";
+    }
 }

@@ -17,6 +17,8 @@ public class StudioMusik implements Serializable {
     private String mKodeStudio;  
     private String mNamaStudio;  
     private int mTarifPerJam;  
+    private String mJamBuka;  
+    private String mJamTutup;  
 
     public StudioMusik() {
     }
@@ -44,6 +46,23 @@ public class StudioMusik implements Serializable {
     public void setmTarifPerJam(int mTarifPerJam) {
         this.mTarifPerJam = mTarifPerJam;
     }
+
+    public String getmJamBuka() {
+        return mJamBuka;
+    }
+
+    public void setmJamBuka(String mJamBuka) {
+        this.mJamBuka = mJamBuka;
+    }
+
+    public String getmJamTutup() {
+        return mJamTutup;
+    }
+
+    public void setmJamTutup(String mJamTutup) {
+        this.mJamTutup = mJamTutup;
+    }
+    
     
     
 }

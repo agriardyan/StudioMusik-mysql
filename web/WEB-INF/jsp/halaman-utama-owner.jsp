@@ -17,35 +17,7 @@
     </head>
     <body>
         <!--Menu bar-->
-        <div class="container">
-            <div class="ui menu">
-                <a class="active item" href="halamanutamaowner">
-                    <i class="book icon"></i> LIHAT LAPORAN
-                </a>
-                <!--a class="item" href="">
-                    <i class="money icon"></i> UBAH HARGA
-                </a-->
-                <div class="right menu">
-                    <form action="logout" method="POST">
-                        <div class="ui dropdown link item">
-                            <i class="user icon"></i> OWNER <i class="dropdown icon"></i>
-                            <div class="menu">
-                                <table class="ui basic table">
-                                    <tr>
-                                        <td>Nama</td>
-                                        <td>${name}</td>
-                                    </tr>
-                                    <tr>
-                                        <td >ID</td>
-                                        <td>${username}</td>
-                                    </tr>
-                                </table>
-                                <input class="ui fluid tiny submit button" type="submit" name="logoutAd" value="Logout">
-                            </div>  
-                        </div>
-                    </form>
-                </div>
-            </div>
+        <%@include file="menubar-owner.jsp" %>
             <!--End of Menu bar-->
 
             <!--            <h3 class="ui white inverted center aligned top attached header">Laporan Bulanan</h3>

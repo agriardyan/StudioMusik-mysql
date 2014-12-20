@@ -112,4 +112,9 @@ public class OwnerController {
         return "halaman-utama-owner";
     }
     
+    @RequestMapping(value = "/underconstruction", method = RequestMethod.GET)
+    public String underConstruction() {
+        return "under-construction";
+    }
+    
 }

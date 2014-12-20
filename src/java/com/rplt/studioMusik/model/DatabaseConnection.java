@@ -25,8 +25,13 @@ public class DatabaseConnection {
 
     public static DataSource getmDataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();  
-        dataSource.setDriverClassName("oracle.jdbc.driver.OracleDriver");  
-        dataSource.setUrl("jdbc:oracle:thin:@172.23.9.185:1521:orcl");
+//        dataSource.setDriverClassName("oracle.jdbc.driver.OracleDriver");  
+//        dataSource.setUrl("jdbc:oracle:thin:@172.23.9.185:1521:orcl");
+//        dataSource.setUsername("mhs125314109");
+//        dataSource.setPassword("mhs125314109");
+        
+        dataSource.setDriverClassName("com.mysql.jdbc.Driver");  
+        dataSource.setUrl("jdbc:mysql://localhost:3306/studiomusik");
         dataSource.setUsername("mhs125314109");
         dataSource.setPassword("mhs125314109");
         
@@ -40,11 +45,14 @@ public class DatabaseConnection {
 
         Connection conn = null;
         try {
-            jdbcURL = "jdbc:oracle:thin:@localhost:1521:xe";
-//            jdbcURL = "jdbc:oracle:thin:@172.23.9.185:1521:orcl";
+//            jdbcURL = "jdbc:oracle:thin:@localhost:1521:xe";
+//            username = "mhs125314109";
+//            password = "mhs125314109";
+//            Class.forName("oracle.jdbc.driver.OracleDriver");
+            jdbcURL = "jdbc:mysql://localhost:3306/studiomusik";
             username = "mhs125314109";
             password = "mhs125314109";
-            Class.forName("oracle.jdbc.driver.OracleDriver");
+            Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(jdbcURL, username, password);
         } catch (Exception ex) {
             ex.printStackTrace();

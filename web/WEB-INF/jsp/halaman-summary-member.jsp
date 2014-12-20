@@ -33,14 +33,14 @@
                     </div>
                     <div class="two fields">
                         <div class="field">
-                            <label>Tanggal Sewa</label>
+                            <label>Mulai Sewa</label>
                             <!--<label>Tanggal Sewa</label>-->
-                            <h3>${tanggalSewa}</h3>
+                            <h3>${mulaiSewa}</h3>
                         </div>
                         <div class="field">
-                            <label>Jam Sewa</label>
+                            <label>Selesai Sewa</label>
                             <!--<label>Jam Sewa</label>-->
-                            <h3>${jamSewa} - ${jamSelesai}</h3>
+                            <h3>${selesaiSewa}</h3>
                         </div>                        
                     </div>
                     <div class="two fields">                        
@@ -90,6 +90,8 @@
                         <input type="hidden" name="jamSewa" value="${jamSewa}" />
                         <input type="hidden" name="durasiSewa" value="${durasiSewa}" />
                         <input type="hidden" name="jamSelesai" value="${jamSelesai}" />
+                        <input type="hidden" name="mulaiSewa" value="${mulaiSewa}" />
+                        <input type="hidden" name="selesaiSewa" value="${selesaiSewa}" />
                         <input type="hidden" name="studio" value="${studio}" />
                         <input type="hidden" name="namaPenyewa" value="${namaPenyewa}" />
                         <input type="hidden" name="noTelp" value="${noTelp}" />
@@ -107,6 +109,8 @@
                         <input type="hidden" name="jamSewa" value="${jamSewa}" />
                         <input type="hidden" name="durasiSewa" value="${durasiSewa}" />
                         <input type="hidden" name="jamSelesai" value="${jamSelesai}" />
+                        <input type="hidden" name="mulaiSewa" value="${mulaiSewa}" />
+                        <input type="hidden" name="selesaiSewa" value="${selesaiSewa}" />
                         <input type="hidden" name="studio" value="${studio}" />
                         <input type="hidden" name="namaPenyewa" value="${namaPenyewa}" />
                         <input type="hidden" name="noTelp" value="${noTelp}" />

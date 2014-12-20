@@ -53,9 +53,9 @@
                                 <div class="default text">Studio</div>
                                 <i class="dropdown icon"></i>
                                 <div class="menu">
-                                    <div class="item" data-value="101" >Studio 1</div>
-                                    <div class="item" data-value="102" >Studio 2</div>
-                                    <div class="item" data-value="103" >Studio 3</div>
+                                    <c:forEach items="${studioList}" var="list" >
+                                    <div class="item" data-value="${list.mKodeStudio}" >${list.mNamaStudio}</div>
+                                    </c:forEach>
                                 </div>
                             </div>
                         </div>
@@ -114,6 +114,8 @@
                     </div>
                     <input type="hidden" name="tanggalSewa" value="${tanggalSewa}" />
                     <input type="hidden" name="jamSewa" value="${jamSewa}" />
+                    <input type="hidden" name="mulaiSewa" value="${mulaiSewa}" />
+                    <input type="hidden" name="selesaiSewa" value="${selesaiSewa}" />
                     <input type="hidden" name="studio" value="${studio}" />
                     <input type="hidden" name="durasiSewa" value="${durasiSewa}" />
                     <input type="hidden" name="biayaunfmt" value="${biayaunfmt}" />

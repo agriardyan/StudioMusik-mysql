@@ -32,6 +32,8 @@ public class MemberDAO implements IMemberDAO<Member> {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         String kode = getGeneratedKodeMember();
         String sql = "INSERT INTO member_studio_musik VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        
+        sql = "INSERT INTO `studiomusik`.`member_studio_musik` VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         jdbcTemplate.update(sql,
                 new Object[]{
@@ -39,12 +41,12 @@ public class MemberDAO implements IMemberDAO<Member> {
                     pT.getmUsernameMember().toUpperCase(),
                     pT.getmPaswordMember(),
                     pT.getmNamaMember().toUpperCase(),
+                    pT.getmTempatLahirMember().toUpperCase(),
                     pT.getmTempatTanggalLahir().toUpperCase(),
                     pT.getmAlamatMember(),
                     pT.getmEmailMember(),
                     pT.getmNomorTelepon(),
                     pT.getmSaldoMember(),
-                    pT.getmTempatLahirMember().toUpperCase()
                 });
 
         pT.setmKodeMember(kode);
@@ -55,6 +57,8 @@ public class MemberDAO implements IMemberDAO<Member> {
         List<Member> memberList = new ArrayList<Member>();
 
         String sql = "SELECT * FROM member_studio_musik";
+        
+        sql = "SELECT * FROM `studiomusik`.`member_studio_musik`";
 
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         memberList = jdbcTemplate.query(sql, new MemberRowMapper());
@@ -66,6 +70,8 @@ public class MemberDAO implements IMemberDAO<Member> {
         List<Member> memberList = new ArrayList<Member>();
 
         String sql = "SELECT * FROM member_studio_musik WHERE username_member = ?";
+        
+        sql = "SELECT * FROM `studiomusik`.`member_studio_musik` WHERE `USERNAME_MEMBER` = ?";
 
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         memberList = jdbcTemplate.query(sql, new Object[]{pUsername.toUpperCase()}, new MemberRowMapper());
@@ -87,22 +93,18 @@ public class MemberDAO implements IMemberDAO<Member> {
     }
 
     @Override
-    public String getSaldo(String pUsername) {
-        String saldo = null;
-
+    public int getSaldo(String pUsername) {
         String sql = "SELECT saldo_member FROM member_studio_musik WHERE username_member = ?";
 
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        saldo = jdbcTemplate.queryForObject(sql, new Object[]{pUsername}, String.class);
-        return saldo;
+        return jdbcTemplate.queryForObject(sql, Integer.class, pUsername);
     }
 
     @Override
     public int simulateKurangSaldo(String pUsername, int pValue) {
         String sql = "SELECT saldo_member FROM MEMBER_STUDIO_MUSIK WHERE username_member = ?";
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        int query = jdbcTemplate.queryForObject(sql, Integer.class, pUsername);
-        return query - pValue;
+        return jdbcTemplate.queryForObject(sql, Integer.class, pUsername) - pValue;
     }
 
     @Override
@@ -207,12 +209,13 @@ public class MemberDAO implements IMemberDAO<Member> {
             member.setmUsernameMember(rs.getString(2));
             member.setmPaswordMember(rs.getString(3));
             member.setmNamaMember(rs.getString(4));
-            member.setmTempatTanggalLahir(rs.getString(5));
-            member.setmAlamatMember(rs.getString(6));
-            member.setmEmailMember(rs.getString(7));
-            member.setmNomorTelepon(rs.getString(8));
-            member.setmSaldoMember(rs.getInt(9));
-            member.setmTempatLahirMember(rs.getString(10));
+            member.setmTempatLahirMember(rs.getString(5));
+            member.setmTempatTanggalLahir(rs.getString(6));
+            member.setmAlamatMember(rs.getString(7));
+            member.setmEmailMember(rs.getString(8));
+            member.setmNomorTelepon(rs.getString(9));
+            member.setmSaldoMember(rs.getInt(10));
+            
 
             return member;
         }

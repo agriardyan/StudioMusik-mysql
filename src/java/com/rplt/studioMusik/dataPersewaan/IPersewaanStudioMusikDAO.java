@@ -6,6 +6,7 @@
 
 package com.rplt.studioMusik.dataPersewaan;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.List;
 import org.springframework.stereotype.Repository;
@@ -17,10 +18,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface IPersewaanStudioMusikDAO<T> {
     
-    public void simpanData(T pPersewaanStudioMusik);
-    public boolean cekKetersediaanJadwal(T pPersewaanStudioMusik);
+    public void simpanData(T pT);
+    public String selesaiSewa(T pT);
+    public boolean cekKetersediaanJadwal(T pT);
     public int hitungBiayaSewa(int pDurasi, String pKodeStudio);
     public String getGeneratedKodeSewa();
     public List<T> getDataListByMonth(String pDate);
+    public byte[] cetakNota(String pKodeSewa, File pReportPath);
     
 }

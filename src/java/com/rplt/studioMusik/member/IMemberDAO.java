@@ -22,7 +22,7 @@ public interface IMemberDAO<T> {
     public List<T> getDataList();
     public List<T> getDataListbyUser(String pUsername);
     public int validateLogin(String pUsername, String pPassword);
-    public String getSaldo(String pUsername);
+    public int getSaldo(String pUsername);
     public String getNamaByUser(String pUsername);
     public String getNoTelpByUser(String pUsername);
     public int simulateKurangSaldo(String pUsername, int pValue);
